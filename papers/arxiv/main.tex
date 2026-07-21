@@ -1,0 +1,448 @@
+% ZenGrowth field note — arXiv working paper v0.2.
+% Adapted from the ZenInvest house template (docs/templates/zeninvest-arxiv/).
+% Build: latexmk -pdf main.tex   (or pdflatex + bibtex + pdflatex x2)
+% Style: self-contained single-column preprint layout (no external .sty).
+%
+% STATUS: v0.2 contains no first-hand measured figures. Each unmeasured
+% claim maps to a procedure in docs/ACADEMIC-PUBLICATION-PLAN.md. Ground rule: never
+% fabricate a statistic — "unmeasured" is written where data does not exist.
+% Primary literature and product pages were rechecked for v0.2; product pages
+% document vendor claims, not independent outcome evidence.
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+\usepackage{titlesec}
+\titleformat*{\section}{\large\bfseries}
+\titleformat*{\subsection}{\normalsize\bfseries}
+
+\newcommand{\gbp}{\pounds}
+% Pending-measurement marker: loud in draft builds, greppable before submission.
+\title{\textbf{Grounded, Not Automated: A Verification-First LLM Career System}}
+
+\author{%
+  Kayvan Nejabati Zenouz\\
+  ZenGrowth (ZENOUZ.ai)\\
+  \texttt{zenouz.ai@gmail.com}%
+}
+
+\date{July 2026\\[0.5em]\normalsize Working paper v0.2 --- architecture and
+pre-registered evaluation; first-hand measurements pending}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+AI career tools promise more interviews through resume optimization or
+unattended application volume, usually without audited outcome denominators.
+We present ZenGrowth, an audience-of-one, local-first system used in a live
+senior AI/Data-Science search. Its design constrains generation to a reviewed
+evidence bank, rejects unallowlisted numeric tokens and detectable named
+entities, records instrumented model calls, and requires operator approval for
+every outbound artifact. These mechanisms reduce important fabrication risks;
+they do not establish sentence-level factual entailment. This v0.2 therefore
+separates implemented architectural controls from empirical claims that remain
+to be measured. We pre-register audits of claim-level grounding, repeated-score
+stability, end-to-end time, and per-application LLM cost. Callback and interview
+effects are unmeasured. We position the system against prior resume-tailoring
+pipelines and single-candidate provenance-aware case studies, and use
+cross-domain productivity experiments only as design analogies, not evidence
+of job-search effectiveness. The contribution at this stage is a
+domain-specific operationalization of verification and oversight, a
+falsifiable evaluation protocol, and a
+claim-audit checklist for candidate-side LLM systems. Our working hypothesis
+is deliberately modest: supervised drafting may be useful when errors are
+cheap to detect, while autonomous submission moves model errors into an
+irreversible, reputation-bearing action.
+\end{abstract}
+
+\section{Introduction}
+
+Between 2023 and 2026 the AI job-search category split into two promises.
+The first is \emph{optimization}: score your resume against a job
+description and close the keyword gap (Jobscan's Match Rate, Teal's Match
+Score)~\citep{jobscan2026, tealhq2026}. The second is \emph{automation}:
+agents that discover postings and submit applications with minimal human
+involvement, at volumes of hundreds per week~\citep{jobcopilot2026,
+aihawk2026}. Both promises are typically supported by testimonials and
+vendor-reported statistics rather than denominator-complete outcome audits.
+
+ZenGrowth is a system built inside this category but against its grain. It
+automates everything \emph{except} the send: discovery, explainable scoring,
+evidence-grounded document generation, interview preparation, and offer
+evaluation --- with a verification path that makes several high-risk forms of
+fabrication mechanically detectable, and a human-approval boundary that makes every
+outbound artifact the operator's deliberate act. It is also an
+audience-of-one deployment: built by its operator for a live senior
+AI/Data-Science search, with workflow events and instrumented model costs logged.
+
+That combination --- category-typical capability, category-atypical
+verification, and an inspectable audit trail --- is what makes an honest field
+note possible. This paper asks three questions. (1)~What does our own
+deployment measurably show (\S\ref{sec:deployment})? (2)~What is the actual
+evidence behind the category's claims (\S\ref{sec:claims})? (3)~Where do
+LLMs genuinely add value in the job search, on the strength of real evidence
+(\S\ref{sec:crossdomain}--\S\ref{sec:recommendations})?
+
+\section{Relation to prior work}
+\label{sec:priorwork}
+
+Candidate-side LLM systems are no longer absent from the literature.
+ResumeFlow generates job-specific resumes from a source resume and proposes
+task-specific alignment and hallucination metrics~\citep{zinjad2024resumeflow}.
+The closest prior work is Resume Tailor, a single-candidate case study using a
+longitudinal career vault, retrieval, provenance tracking, guardrails, and a
+conditional review loop across nine job descriptions~\citep{abhinav2026career}.
+These papers invalidate any broad claim that personal LLM application systems
+are undocumented.
+
+ZenGrowth's narrower proposed delta is \emph{operational and longitudinal}:
+a live, local-first deployment that connects reviewed evidence, deterministic
+write-time risk gates, cost and latency telemetry, an application-level action log,
+and a hard approval boundary. Unlike an ATS-style fit score, its planned
+evaluation treats unsupported or embellished claims as the primary failure
+outcome and separately reports downstream job-search outcomes when enough data
+exist. That delta is a hypothesis until the audits in
+\S\ref{sec:deployment} are complete.
+
+In the broader agent literature, ZenGrowth is not a new general-purpose agent
+architecture or benchmark. AgencyBench evaluates long-horizon capability over
+138 tasks and 32 real-world scenarios~\citep{li2026agencybench}. Auditable
+Agents already formalizes action recoverability, lifecycle coverage, policy
+checkability, responsibility attribution, and evidence integrity
+\citep{nian2026auditable}. ZenGrowth should therefore be read as a
+domain-specific implementation and evaluation opportunity, not as the origin
+of agent auditability. Recent interview research with 17 experienced developers
+also identifies a priori control, co-planning, real-time monitoring, and post
+hoc review as distinct forms of oversight~\citep{dhanorkar2026oversight}.
+ZenGrowth currently emphasizes a priori gates and post hoc operator review; it
+does not yet evaluate the other forms or show that its review is sufficient.
+
+Employer-side work provides important context but not candidate-side outcome
+evidence. Classical correspondence experiments manipulate perceived identity
+in otherwise similar applications~\citep{bertrand2004emily}. More recent audits
+find demographic sensitivity in embedding retrieval and GPT-based resume
+assessment~\citep{wilson2024resume,armstrong2024silicon}; a 2026 audit across
+newer models reports null or reversed gaps in several settings, showing that
+direction and magnitude depend on model vintage and protocol~\citep{gao2026hire}.
+The relevant conclusion is not that all screeners share one stable bias, but
+that candidate materials enter a model-mediated environment whose behavior
+requires versioned, task-specific auditing.
+
+\section{First-hand evidence: the ZenGrowth deployment}
+\label{sec:deployment}
+
+\subsection{The system under test}
+
+ZenGrowth is a local-first FastAPI/React application with a SQLite store,
+operated since early 2026 for a live senior AI/DS search. Its pipeline:
+nightly compliant discovery over public ATS feeds (Greenhouse/Lever JSON;
+no scraping of job boards) with a dead-man's-switch heartbeat; an LLM-free
+relevance precheck; single-call strict-JSON scoring at $temperature=0$
+producing a per-dimension rationale and a \emph{priority score} --- a
+weighted sum of observable fit dimensions in which the model's uncalibrated
+success-probability guess is demoted to a tie-breaking band and application
+effort is a separate cost axis; and evidence-grounded generation of CVs,
+cover letters, and application answers.
+
+The verification path is the load-bearing component. Source documents are
+parsed into claims with provenance; claims auto-verify only when the cited
+span exists in the source and high-risk tokens match that span, while the
+rest queue for operator review. Generation receives only verified claims.
+Write-time gates reject numbers and a conservative subset of named entities
+found in neither the evidence bank nor the job context. These allowlists catch
+important fabrication classes but do not prove that every sentence is entailed
+by its cited evidence; that stronger property is the subject of the planned
+claim-level audit. Alias resolution merges entity surface variants. A deterministic,
+zero-LLM-cost JD match report (term coverage, quantified-line count, cliché
+detection) accompanies every material as a signal, not a target. Interview
+preparation, debriefs, offer evaluation (web-researched, citation-listed,
+negotiation-aware), and onboarding/departure planning extend the same
+pattern: research and drafting with provenance, under operator approval.
+Nothing is ever sent by the system; drafts carry a never-sent banner until
+the operator acts.
+
+Instrumented model paths record cost and latency; a configured daily spend
+ceiling fails closed; and meaningful workflow transitions land in an
+audit log streamed to the dashboard. The continuously integrated
+test suite includes deterministic
+eval gates: hard-fact faithfulness, retrieval recall, entity-resolution
+pairwise F1, claim-versus-span distortion checks, and a scoring calibration
+suite (rewording stability bounds, hand-ranked monotonicity, anchor drift
+alarms) --- all CI-enforced with zero LLM spend. Pinning scoring to
+$temperature=0$ is a reproducibility control, not a guarantee of identical
+provider outputs; repeated-score stability is measured separately.
+
+\begin{figure}[ht]
+\centering
+\fbox{\begin{minipage}{0.92\linewidth}
+\centering
+\textbf{Evidence path}\\[3pt]
+Source documents $\rightarrow$ span-backed claims $\rightarrow$ automatic or
+operator verification\\[7pt]
+\textbf{Generation path}\\[3pt]
+Verified evidence + job context $\rightarrow$ LLM draft $\rightarrow$
+numeric/entity gates $\rightarrow$ operator review $\rightarrow$ outbound action\\[7pt]
+\textbf{Control plane}\\[3pt]
+Cost/latency telemetry \quad $\vert$ \quad audit log \quad $\vert$ \quad
+daily spend ceiling \quad $\vert$ \quad CI gates
+\end{minipage}}
+\caption{ZenGrowth's verification-first boundary. Deterministic gates reduce
+specific risks; the operator remains responsible for semantic verification and
+all external actions.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Pre-registered evaluation and current status}
+
+Table~\ref{tab:pending} is a claims scorecard, not a results table. At v0.2
+the repository establishes that the listed mechanisms exist and are tested;
+it does not establish their field rates or downstream value. Measurements will
+be frozen as dated aggregate artifacts using the public protocol
+\citep{zengrowth2026protocol} before numerical claims enter the abstract.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabularx}{\linewidth}{p{0.08\linewidth}p{0.33\linewidth}X}
+\toprule
+\textbf{Claim} & \textbf{Current verdict} & \textbf{Required measurement} \\
+\midrule
+C3/C7 & \textbf{Partially verified}: gates exist; semantic fidelity unmeasured & Stratified audit of $\geq$20 generated claims; grounded / unsupported / embellished rates with adjudication rules \\
+C4 & \textbf{Unmeasured}: ``about two minutes'' withdrawn pending timing & $\geq$3 end-to-end runs on frozen public postings; wall-clock median and range \\
+C5 & \textbf{Unmeasured}: per-call telemetry exists & Per-application cost distribution with operation inclusion rules and currency conversion date \\
+C2/C8 & \textbf{Partially verified}: rationale and zero-temperature control exist & 3--5 re-scores per frozen input; score and rank variance with model version \\
+C1 & \textbf{Unmeasured}: discovery pipeline exists & Archive audit with relevance rubric, sample size, and relevant-role loss rate \\
+C6 & \textbf{Partially verified}: local store and documented model egress & Enumerated egress audit: payload class, recipient, trigger, retention, and disclosure \\
+C2b & \textbf{Unmeasured}: usefulness of rank unknown & Rank association with pre-specified pursue decisions; report $n$ and dependence limitations \\
+--- & \textbf{Unmeasured}: callback/interview effect & Tracked campaign with complete application denominator and outcome follow-up \\
+\bottomrule
+\end{tabularx}
+\caption{Claim status and pre-registered measurement plan for v1.}
+\label{tab:pending}
+\end{table}
+
+\subsection{What the deployment already demonstrates}
+
+Some findings do not wait for the quantitative pass because they are
+architectural facts with test witnesses. The grounding gates fail generation
+when a detectable, unallowlisted figure or entity appears, and the distortion
+check demotes extracted claims whose numbers do not match their cited span.
+Scoring records a rationale and uses a zero-temperature control. A configured
+daily ceiling blocks further model calls once recorded spend reaches the cap.
+These are properties of the implementation, not estimates of end-to-end
+factual accuracy, scoring stability, or user value. The system is also
+\emph{diagnosable}: logged workflow transitions and instrumented model costs
+make the planned aggregate analyses possible. That auditability supported the
+diagnosis of ranking-formula and lifecycle defects during development, while
+the completeness of the log remains something to test rather than assume.
+
+\subsection{Limitations of our evidence}
+\label{sec:limitations}
+
+A single operator, a single live search, one configuration lineage, no
+control arm (no paired untailored applications), and small $n$ throughout;
+the operator is also the system's author, so pursue-decisions are not
+independent of the scoring being evaluated. Downstream outcomes confound
+with market conditions, seniority, and field. The grounding audit samples
+materials generated for real applications and therefore cannot be published
+raw --- only aggregate, de-identified rates. These limitations bound the
+claims: our data will support ``measured properties of one audited
+deployment, with diagnosed mechanisms,'' not effect sizes for the category.
+
+\section{The AI-career-tool claims landscape}
+\label{sec:claims}
+
+\emph{Qualitative synthesis from primary product pages accessed in 2026-07.
+Product-defined match scores and vendor outcome claims are treated as marketing
+evidence, not causal estimates.}
+
+\subsection{Optimization tools: scores without outcome audits}
+
+Jobscan recommends a product-defined Match Rate of at least 75\%; Teal exposes
+a 0--100\% resume-to-job score and emphasizes keyword and skill
+alignment~\citep{jobscan2026,tealhq2026}. Both publish outcome-oriented claims,
+but the reviewed pages do not disclose assignment mechanisms,
+denominator-complete cohorts, attrition, or independent audits. Their scores
+may be useful editing signals, but they are not calibrated callback
+probabilities. Classical correspondence studies supply controlled callback
+evidence for employer discrimination~\citep{bertrand2004emily}; they do not
+identify the causal effect of commercial match-score optimization for the same
+candidate.
+
+\subsection{Automation tools: volume as value}
+
+JobCopilot advertises up to 50 applications per day and ``10X more''
+interviews; its public page supports the product capability and the existence
+of the claim, not its causal validity~\citep{jobcopilot2026}. AIHawk documents
+an open-source automated application agent; the original repository was
+archived in May 2026~\citep{aihawk2026}. Volume is an activity metric. A useful
+evaluation must also report complete outcome denominators, review time, false
+submissions, and corrections. Claims about employer detection or platform-wide
+countermeasures are excluded here because this review did not identify a
+sufficiently direct primary evidence base.
+
+\subsection{The screening environment}
+
+Generated applications can enter algorithmic or LLM-mediated screening.
+Published audits demonstrate demographic sensitivity, but disagree on its
+direction across models and protocols~\citep{wilson2024resume,
+armstrong2024silicon,gao2026hire}. For a candidate-side tool this cuts two
+ways: keyword optimization may exploit model-specific ranking behavior rather
+than communicate fit, and a fabricated or embellished claim may survive early
+screening only to create greater risk at interview or verification stages.
+
+\section{Cross-domain evidence}
+\label{sec:crossdomain}
+
+No reviewed experiment establishes that LLM-tailored applications improve
+callback rates. The following cross-domain studies motivate evaluation choices
+and design hypotheses only; their effect sizes do not transfer to job search.
+
+\paragraph{Bounded assistance.} A staggered rollout across 5{,}179 support
+agents increased resolutions per hour by 14\% on average and 34\% for novice
+and lower-skilled workers, without reducing average customer
+satisfaction~\citep{brynjolfsson2023generative}. A separate Copilot experiment
+found 55.8\% faster completion on one specified JavaScript task
+\citep{peng2023copilot}. These results show that bounded assistance can help in
+some settings; they do not identify the value of resume tailoring. ZenGrowth's
+operator-review boundary is an evidence-informed design choice to be tested,
+not a result imported from those studies.
+
+\paragraph{Perception is not elapsed time.} An early-2025 METR randomized
+trial of 16 experienced open-source developers found a 19\% slowdown while
+participants estimated after the study that AI had made them 20\%
+faster~\citep{becker2025metr}. METR's later experiment encountered substantial
+task and participant selection effects as agentic tools became harder to
+withhold~\citep{metr2026update}. The appropriate lesson is methodological:
+self-reported productivity and task-level timing answer different questions,
+and both require explicit sampling assumptions.
+
+\paragraph{Supervision has a cost.} Agent-usability work frames human
+supervision time as part of the return-on-investment calculation rather than a
+free safety layer~\citep{liu2025agenticroi}. This matters in both directions:
+review can prevent an irreversible submission error, but excessive review can
+erase any time saving. ZenGrowth therefore needs to measure operator review
+time and correction burden alongside model latency and spend.
+
+\section{A taxonomy of claim failure modes for AI career tools}
+\label{sec:taxonomy}
+
+\begin{table}[ht]
+\centering
+\footnotesize
+\begin{tabularx}{\linewidth}{p{0.24\linewidth}X p{0.25\linewidth}}
+\toprule
+\textbf{Failure mode} & \textbf{Mechanism} & \textbf{Category example} \\
+\midrule
+Survivorship testimonial & Winners self-report; denominators absent & ``I got 5 interviews in a week'' \\
+ATS folklore & Unverifiable claims about parser behavior drive product design & ``Robots reject resumes without keyword X'' \\
+Score--outcome conflation & Keyword coverage quoted as if it were callbacks & Match-score marketing \\
+Volume-as-value & Applications sent quoted; interviews per application absent & Auto-applier dashboards \\
+Perception--reality gap & Users feel more effective; measurement disagrees & $-19$\% vs.\ $+20$\%~\citep{becker2025metr} \\
+Cost-blind accounting & Subscription, review time, and reputation risk excluded & ``Free'' bulk applying \\
+Fabrication externality & Embellished claims surface later (interview, reference, background check) & Ungrounded CV generation \\
+Aggregate masking & Averages hide seniority/field segments where the tool fails & Cross-field conversion stats \\
+Capability relabeling & Activity or template completion described as outcome value & Product capability claims \\
+\bottomrule
+\end{tabularx}
+\caption{Failure modes to test when evaluating AI career-tool claims. The
+taxonomy is an analytical checklist, not an estimate of category prevalence.}
+\label{tab:taxonomy}
+\end{table}
+
+\section{Where LLMs genuinely add value in the job search}
+\label{sec:recommendations}
+
+The architecture follows a testable risk heuristic: assistance is easier to
+justify when errors are cheap to detect before action, and harder to justify
+when model output can directly trigger an irreversible outcome. Applied to
+this system:
+
+\textbf{Evaluate first:} evidence-constrained drafting under operator
+review; research synthesis with surfaced citations (interview preparation,
+offer benchmarking); structured extraction checkable against a schema
+(paste-to-fill intake); deterministic quality signals (match reports,
+grounding gates) that inform rather than optimize; inspectable audit trails. The
+evaluation must include correction burden, false reassurance, and review time.
+
+\textbf{Avoid, or gate hard:} unattended submission of applications;
+keyword optimization as a target rather than a signal; generation without a
+truth model; volume strategies that spend the candidate's reputation;
+treating model confidence as calibrated probability.
+
+In design terms: keep high-risk checks deterministic where possible; let no
+LLM authority cross the approval boundary; rank on observable signal and
+demote uncalibrated confidence; freeze baselines before interventions; and use
+the audit trail to make negative results diagnosable.
+
+\section{A checklist for evaluating AI career-tool claims}
+\label{sec:checklist}
+
+(1) Outcome data, or testimonial --- and is the denominator (total
+applications) reported? (2) Net of all costs, including subscription, review
+time, and reputation risk? (3) What is $n$, and who selected the sample?
+(4) Stratified by seniority, field, and market, or aggregate? (5) Measured,
+or self-reported? (6) Who audits the number? (7) Is there a control arm ---
+the same candidate, untailored or unassisted? (8) Would the vendor publish a
+negative result? (This paper pre-registers its measurements so that item~8
+is answered by construction.)
+
+\section{Conclusion (provisional at v0.2)}
+
+ZenGrowth implements a verification-first alternative to unattended applying:
+reviewed evidence before generation, deterministic checks for selected
+high-risk tokens, and operator approval before dispatch. The repository shows
+that these controls exist and are regression-tested. It does not yet show the
+rate at which unsupported semantic claims survive, whether repeated scores are
+stable, whether an application takes two minutes or costs under \gbp1, or
+whether tailored materials improve callbacks. Those are the pre-registered
+tests, not conclusions.
+
+The revised novelty claim is correspondingly narrow. Prior systems already
+generate tailored resumes and use longitudinal retrieval with provenance.
+ZenGrowth may contribute a longitudinal field account that connects
+write-time controls, telemetry, correction burden, and downstream outcomes,
+published with complete denominators. Whether that contribution survives
+measurement is deliberately left open. At v0.2, the strongest result is a
+falsifiable protocol and an implemented boundary between model assistance and
+reputation-bearing action.
+
+\paragraph{Planned revisions.} v1: execute and freeze the
+Table~\ref{tab:pending} measurements, publish the claim-level adjudication
+rubric, and report all aggregate results including failures. v2: add
+tracked-campaign outcome data, an executable replay fixture, and the final
+venue decision.
+
+\subsubsection*{Reproducibility}
+ZenGrowth's measurement protocol is documented in the repository
+\citep{zengrowth2026protocol}. The deterministic eval gates that witness
+architectural controls run in public CI. Dated aggregate baselines and their
+derivation queries will be published with v1; underlying personal career data
+will not be published (see Limitations).
+
+\subsubsection*{Acknowledgments}
+LLM-based coding and research tools assisted drafting, literature discovery,
+and implementation inside the ZenGrowth repository. The author reviewed the
+manuscript and accepts responsibility for its claims; empirical claims marked
+unmeasured remain unresolved by design. The author is the system's sole
+operator and beneficiary, which is both the evidence base and a declared
+conflict. This work received no external funding.
+
+\bibliographystyle{plainnat}
+\small
+\setlength{\bibsep}{2pt}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,22 @@
+# Local-first docker-compose for ZenGrowth.
+#
+# This runs the internal API only. The React/Vite dashboard is run with
+# `npm run dev` during local development and proxies /api + /health to the API
+# on :8000 (see docs/LOCAL_SETUP.md and frontend/vite.config.ts).
+#
+# Production reverse proxy, TLS termination, real domains, and host mounts are
+# intentionally NOT part of this public mirror.
+services:
+  api:
+    build: .
+    image: zengrowth:latest
+    container_name: zengrowth-api
+    env_file: .env
+    # Published on loopback for local dashboard development only.
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./templates:/app/templates
+    command: ["uvicorn", "zengrowth.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    restart: unless-stopped

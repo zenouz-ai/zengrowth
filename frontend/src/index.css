@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+  html {
+    height: 100%;
+    /* Keep iOS Safari from inflating text in landscape. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    min-height: 100%;
+    color: var(--color-text);
+    font-family: 'Outfit Variable', 'Outfit', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-color: var(--color-bg);
+    /* Replace the grey iOS tap flash with a subtle brand tint. */
+    -webkit-tap-highlight-color: rgba(0, 212, 255, 0.12);
+  }
+  #root {
+    background:
+      radial-gradient(1400px 700px at 18% -8%, rgba(99, 50, 255, 0.1), transparent 55%),
+      radial-gradient(1100px 600px at 100% 0%, rgba(0, 212, 255, 0.06), transparent 50%),
+      linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-2) 45%, var(--color-bg-2) 100%);
+    background-attachment: fixed;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: 'Syne Variable', 'Syne', ui-sans-serif, system-ui, sans-serif;
+  }
+  ::selection {
+    background: rgba(99, 50, 255, 0.45);
+    color: var(--color-text);
+  }
+}
+
+@layer components {
+  .glass {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  }
+  .micro-label {
+    font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.68rem;
+    color: var(--color-muted);
+  }
+}
+
+@layer utilities {
+  /* Keep fixed chrome clear of the iPhone notch / home indicator
+     (requires viewport-fit=cover, set in index.html). */
+  .safe-px {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+  .safe-pb {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Login-page ambience: slow drifting brand glow behind the card. */
+@keyframes aurora-drift {
+  0%,
+  100% {
+    transform: translate3d(-6%, -4%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, 5%, 0) scale(1.12);
+  }
+}
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-aurora {
+  animation: aurora-drift 14s ease-in-out infinite;
+  will-change: transform;
+}
+.animate-rise {
+  animation: rise-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-rise-late {
+  animation: rise-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-aurora,
+  .animate-rise,
+  .animate-rise-late {
+    animation: none;
+  }
+}

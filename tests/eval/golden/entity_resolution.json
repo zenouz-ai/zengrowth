@@ -1,0 +1,69 @@
+{
+  "description": "EVAL-05 hand-labelled entity-resolution golden set. Each case lists surface mentions of knowledge-graph entities with a gold cluster label (same label = same real-world entity). The gate scores cluster_entity_names against the gold clustering with pairwise F1 >= 0.85. Includes deliberate hard negatives that must NOT merge (Acme vs Acme Health, Meta vs Metabase, Google vs Google DeepMind, Java vs JavaScript) and known-hard recall misses that keep the gate honest (initialisms like IBM, abbreviation aliases like 'ML Engineer'). Entity identity is scoped by entity_type: mentions of different types never merge by design.",
+  "cases": [
+    {
+      "id": "employers",
+      "mentions": [
+        {"id": "e01", "name": "Acme", "entity_type": "employer", "gold_cluster": "acme"},
+        {"id": "e02", "name": "Acme Inc", "entity_type": "employer", "gold_cluster": "acme"},
+        {"id": "e03", "name": "Acme Inc.", "entity_type": "employer", "gold_cluster": "acme"},
+        {"id": "e04", "name": "Acme Incorporated", "entity_type": "employer", "gold_cluster": "acme"},
+        {"id": "e05", "name": "Acme Corporation", "entity_type": "employer", "gold_cluster": "acme"},
+        {"id": "e06", "name": "ACME CORP", "entity_type": "employer", "gold_cluster": "acme"},
+        {"id": "e07", "name": "Acme Health", "entity_type": "employer", "gold_cluster": "acme-health"},
+        {"id": "e08", "name": "Acme Health Ltd", "entity_type": "employer", "gold_cluster": "acme-health"},
+        {"id": "e09", "name": "Novartis", "entity_type": "employer", "gold_cluster": "novartis"},
+        {"id": "e10", "name": "Novartis AG", "entity_type": "employer", "gold_cluster": "novartis"},
+        {"id": "e11", "name": "Google", "entity_type": "employer", "gold_cluster": "google"},
+        {"id": "e12", "name": "Google DeepMind", "entity_type": "employer", "gold_cluster": "google-deepmind"},
+        {"id": "e13", "name": "Meta", "entity_type": "employer", "gold_cluster": "meta"},
+        {"id": "e14", "name": "Metabase", "entity_type": "employer", "gold_cluster": "metabase"},
+        {"id": "e15", "name": "IBM", "entity_type": "employer", "gold_cluster": "ibm"},
+        {"id": "e16", "name": "International Business Machines", "entity_type": "employer", "gold_cluster": "ibm"}
+      ],
+      "must_not_merge": [
+        ["e01", "e07"],
+        ["e11", "e12"],
+        ["e13", "e14"]
+      ]
+    },
+    {
+      "id": "tools",
+      "mentions": [
+        {"id": "t01", "name": "PyTorch", "entity_type": "tool", "gold_cluster": "pytorch"},
+        {"id": "t02", "name": "pytorch", "entity_type": "tool", "gold_cluster": "pytorch"},
+        {"id": "t03", "name": "Py-Torch", "entity_type": "tool", "gold_cluster": "pytorch"},
+        {"id": "t04", "name": "PostgreSQL", "entity_type": "tool", "gold_cluster": "postgres"},
+        {"id": "t05", "name": "Postgres", "entity_type": "tool", "gold_cluster": "postgres"},
+        {"id": "t06", "name": "Kubernetes", "entity_type": "tool", "gold_cluster": "kubernetes"},
+        {"id": "t07", "name": "Kubernets", "entity_type": "tool", "gold_cluster": "kubernetes"},
+        {"id": "t08", "name": "AWS", "entity_type": "tool", "gold_cluster": "aws"},
+        {"id": "t09", "name": "AWS Lambda", "entity_type": "tool", "gold_cluster": "aws-lambda"},
+        {"id": "t10", "name": "scikit-learn", "entity_type": "tool", "gold_cluster": "sklearn"},
+        {"id": "t11", "name": "Scikit Learn", "entity_type": "tool", "gold_cluster": "sklearn"}
+      ],
+      "must_not_merge": [
+        ["t08", "t09"]
+      ]
+    },
+    {
+      "id": "skills-and-roles",
+      "mentions": [
+        {"id": "s01", "name": "Machine Learning", "entity_type": "skill", "gold_cluster": "ml"},
+        {"id": "s02", "name": "machine-learning", "entity_type": "skill", "gold_cluster": "ml"},
+        {"id": "s03", "name": "Java", "entity_type": "skill", "gold_cluster": "java"},
+        {"id": "s04", "name": "JavaScript", "entity_type": "skill", "gold_cluster": "javascript"},
+        {"id": "s05", "name": "Stakeholder Management", "entity_type": "skill", "gold_cluster": "stakeholder-mgmt"},
+        {"id": "s06", "name": "Stakeholder Managment", "entity_type": "skill", "gold_cluster": "stakeholder-mgmt"},
+        {"id": "s07", "name": "Python", "entity_type": "skill", "gold_cluster": "python-skill"},
+        {"id": "s08", "name": "Python", "entity_type": "tool", "gold_cluster": "python-tool"},
+        {"id": "s09", "name": "Machine Learning Engineer", "entity_type": "role", "gold_cluster": "ml-engineer"},
+        {"id": "s10", "name": "ML Engineer", "entity_type": "role", "gold_cluster": "ml-engineer"}
+      ],
+      "must_not_merge": [
+        ["s03", "s04"],
+        ["s07", "s08"]
+      ]
+    }
+  ]
+}
