@@ -1,0 +1,45 @@
+{
+  "description": "EVAL-07 scoring calibration golden set. Dimension values are frozen temperature-0 scorer outputs (0-100 per dimension, TP-07 determinism). rewording_pairs: the same JD scored under two rewordings — per-dimension jitter is small, and the priority aggregation must not amplify it (|delta| <= 3.0). hand_ranked: jobs in the operator's hand-ranked order, best first; the priority ranking must agree with Kendall tau >= 0.8. The list keeps one deliberate human/formula disagreement (the operator ranks the low-comp role below the weaker-domain role, weighting compensation harder than the formula does) so the gate stays honest below 1.0 — a genuine TA-09 calibration tension, not a bug. anchors: frozen expected priority scores; any weight change trips this drift alarm and must consciously update the fixtures.",
+  "rewording_pairs": [
+    {
+      "id": "head-of-ml-reworded",
+      "variant_a": {"role_relevance": 88, "ai_technical_alignment": 90, "compensation_fit": 80, "leadership_alignment": 85, "domain_fit": 80, "hybrid_location_fit": 85, "strategic_career_value": 85},
+      "variant_b": {"role_relevance": 86, "ai_technical_alignment": 91, "compensation_fit": 80, "leadership_alignment": 83, "domain_fit": 82, "hybrid_location_fit": 85, "strategic_career_value": 84}
+    },
+    {
+      "id": "platform-lead-reworded",
+      "variant_a": {"role_relevance": 75, "ai_technical_alignment": 70, "compensation_fit": 65, "leadership_alignment": 70, "domain_fit": 60, "hybrid_location_fit": 75, "strategic_career_value": 70},
+      "variant_b": {"role_relevance": 72, "ai_technical_alignment": 73, "compensation_fit": 65, "leadership_alignment": 68, "domain_fit": 63, "hybrid_location_fit": 75, "strategic_career_value": 68}
+    },
+    {
+      "id": "director-ai-reworded",
+      "variant_a": {"role_relevance": 90, "ai_technical_alignment": 88, "compensation_fit": 75, "leadership_alignment": 85, "domain_fit": 90, "hybrid_location_fit": 80, "strategic_career_value": 88},
+      "variant_b": {"role_relevance": 92, "ai_technical_alignment": 85, "compensation_fit": 78, "leadership_alignment": 85, "domain_fit": 88, "hybrid_location_fit": 80, "strategic_career_value": 90}
+    },
+    {
+      "id": "data-manager-reworded",
+      "variant_a": {"role_relevance": 60, "ai_technical_alignment": 55, "compensation_fit": 70, "leadership_alignment": 50, "domain_fit": 45, "hybrid_location_fit": 80, "strategic_career_value": 55},
+      "variant_b": {"role_relevance": 58, "ai_technical_alignment": 58, "compensation_fit": 70, "leadership_alignment": 48, "domain_fit": 47, "hybrid_location_fit": 80, "strategic_career_value": 52}
+    },
+    {
+      "id": "consultancy-role-same-direction-jitter",
+      "variant_a": {"role_relevance": 70, "ai_technical_alignment": 65, "compensation_fit": 60, "leadership_alignment": 65, "domain_fit": 55, "hybrid_location_fit": 70, "strategic_career_value": 65},
+      "variant_b": {"role_relevance": 73, "ai_technical_alignment": 68, "compensation_fit": 62, "leadership_alignment": 67, "domain_fit": 58, "hybrid_location_fit": 72, "strategic_career_value": 67}
+    }
+  ],
+  "hand_ranked": [
+    {"id": "dream-fit-director-ai", "probability": 0.3, "dimensions": {"role_relevance": 92, "ai_technical_alignment": 95, "compensation_fit": 85, "leadership_alignment": 90, "domain_fit": 88, "hybrid_location_fit": 90, "strategic_career_value": 95}},
+    {"id": "strong-fit-head-of-ml", "probability": 0.45, "dimensions": {"role_relevance": 88, "ai_technical_alignment": 90, "compensation_fit": 80, "leadership_alignment": 85, "domain_fit": 80, "hybrid_location_fit": 85, "strategic_career_value": 85}},
+    {"id": "solid-role-weak-domain", "probability": 0.5, "dimensions": {"role_relevance": 80, "ai_technical_alignment": 78, "compensation_fit": 75, "leadership_alignment": 70, "domain_fit": 55, "hybrid_location_fit": 75, "strategic_career_value": 70}},
+    {"id": "good-fit-lower-comp", "probability": 0.5, "dimensions": {"role_relevance": 85, "ai_technical_alignment": 85, "compensation_fit": 55, "leadership_alignment": 80, "domain_fit": 82, "hybrid_location_fit": 85, "strategic_career_value": 80}},
+    {"id": "mediocre-fit", "probability": 0.6, "dimensions": {"role_relevance": 65, "ai_technical_alignment": 70, "compensation_fit": 70, "leadership_alignment": 60, "domain_fit": 60, "hybrid_location_fit": 70, "strategic_career_value": 60}},
+    {"id": "high-comp-weak-role", "probability": 0.7, "dimensions": {"role_relevance": 45, "ai_technical_alignment": 55, "compensation_fit": 95, "leadership_alignment": 50, "domain_fit": 50, "hybrid_location_fit": 70, "strategic_career_value": 50}},
+    {"id": "junior-misaligned", "probability": 0.8, "dimensions": {"role_relevance": 40, "ai_technical_alignment": 45, "compensation_fit": 50, "leadership_alignment": 35, "domain_fit": 40, "hybrid_location_fit": 60, "strategic_career_value": 40}},
+    {"id": "poor-fit", "probability": 0.9, "dimensions": {"role_relevance": 25, "ai_technical_alignment": 30, "compensation_fit": 40, "leadership_alignment": 30, "domain_fit": 25, "hybrid_location_fit": 50, "strategic_career_value": 30}}
+  ],
+  "anchors": [
+    {"id": "anchor-high", "expected_priority": 91.1, "dimensions": {"role_relevance": 92, "ai_technical_alignment": 95, "compensation_fit": 85, "leadership_alignment": 90, "domain_fit": 88, "hybrid_location_fit": 90, "strategic_career_value": 95}},
+    {"id": "anchor-mid", "expected_priority": 65.8, "dimensions": {"role_relevance": 65, "ai_technical_alignment": 70, "compensation_fit": 70, "leadership_alignment": 60, "domain_fit": 60, "hybrid_location_fit": 70, "strategic_career_value": 60}},
+    {"id": "anchor-low", "expected_priority": 31.8, "dimensions": {"role_relevance": 25, "ai_technical_alignment": 30, "compensation_fit": 40, "leadership_alignment": 30, "domain_fit": 25, "hybrid_location_fit": 50, "strategic_career_value": 30}}
+  ]
+}

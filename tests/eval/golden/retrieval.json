@@ -1,0 +1,44 @@
+{
+  "_comment": "EVAL-04 (lite) seed retrieval cases. `expected_claim_ids` are the claims a correct retriever must surface for the job. `confidence` is recorded so the rank-before-cap regression test can reproduce the old confidence-first behaviour. Banks are kept small so precision@k is meaningful.",
+  "cases": [
+    {
+      "id": "ret-001-agentic",
+      "limit": 4,
+      "job": {
+        "company": "Novartis",
+        "title": "Director Agentic AI",
+        "location": "London",
+        "description": "Agentic AI for drug development using LangGraph and AutoGen in healthcare.",
+        "job_summary": {"requirements": ["LangGraph", "AutoGen", "healthcare AI"]},
+        "fit_score": 88.0
+      },
+      "evidence_bank": [
+        {"id": "c1", "claim_text": "Built LangGraph multi-agent platforms for enterprise AI.", "confidence": 0.9, "tags": ["agentic"]},
+        {"id": "c2", "claim_text": "Delivered AutoGen agent workflows in a healthcare setting.", "confidence": 0.82, "tags": ["healthcare"]},
+        {"id": "c3", "claim_text": "Managed quarterly finance reporting for the FP&A team.", "confidence": 0.95, "tags": ["finance"]},
+        {"id": "c4", "claim_text": "Ran the office relocation logistics project.", "confidence": 0.88, "tags": ["ops"]},
+        {"id": "c5", "claim_text": "Wrote internal documentation for onboarding.", "confidence": 0.7, "tags": ["docs"]}
+      ],
+      "expected_claim_ids": ["c1", "c2"]
+    },
+    {
+      "id": "ret-002-payments",
+      "limit": 3,
+      "job": {
+        "company": "Wise",
+        "title": "Principal Payments Engineer",
+        "location": "London",
+        "description": "Scale payments infrastructure for reliability and low latency.",
+        "job_summary": {"requirements": ["payments", "latency", "reliability"]},
+        "fit_score": 70.0
+      },
+      "evidence_bank": [
+        {"id": "p1", "claim_text": "Reduced payment processing latency by 30 percent.", "confidence": 0.8, "tags": ["payments"]},
+        {"id": "p2", "claim_text": "Improved payments reliability with idempotent retries.", "confidence": 0.78, "tags": ["reliability"]},
+        {"id": "p3", "claim_text": "Organised the annual team offsite.", "confidence": 0.9, "tags": ["ops"]},
+        {"id": "p4", "claim_text": "Maintained the internal design-system component library.", "confidence": 0.85, "tags": ["frontend"]}
+      ],
+      "expected_claim_ids": ["p1", "p2"]
+    }
+  ]
+}

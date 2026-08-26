@@ -1,0 +1,83 @@
+{
+  "description": "TP-02b claim-vs-span distortion golden set. Each case pairs an extracted claim with the span it cites. Faithful cases (distorted=false) must produce no violations; distorted cases (distorted=true) must be flagged with exactly the listed tokens. Covers the correct-span/wrong-claim classes: changed figures, magnitude inflation, invented counts, and swapped/added named tools — plus faithful controls for comma-grouped numbers and generic business acronyms (exempt).",
+  "cases": [
+    {
+      "id": "faithful-percentage",
+      "claim_text": "Increased revenue by 40%.",
+      "source_span": "increased revenue by 40% year over year",
+      "distorted": false
+    },
+    {
+      "id": "faithful-team-size-and-tool",
+      "claim_text": "Led a team of 12 engineers at Novartis using PyTorch.",
+      "source_span": "led a 12-person engineering team at Novartis, building models in PyTorch",
+      "distorted": false
+    },
+    {
+      "id": "faithful-comma-grouped-number",
+      "claim_text": "Processed 1,200 documents daily.",
+      "source_span": "processed 1200 documents per day",
+      "distorted": false
+    },
+    {
+      "id": "faithful-acronym",
+      "claim_text": "Delivered the migration to AWS.",
+      "source_span": "delivered the AWS migration",
+      "distorted": false
+    },
+    {
+      "id": "faithful-no-hard-facts",
+      "claim_text": "Led the data platform team.",
+      "source_span": "led the data platform team through two reorganisations",
+      "distorted": false
+    },
+    {
+      "id": "faithful-generic-acronyms-exempt",
+      "claim_text": "Improved KPI reporting for the CEO.",
+      "source_span": "improved executive reporting",
+      "distorted": false
+    },
+    {
+      "id": "distorted-changed-percentage",
+      "claim_text": "Increased revenue by 40%.",
+      "source_span": "increased revenue by 30% over two years",
+      "distorted": true,
+      "expected_violations": ["40"]
+    },
+    {
+      "id": "distorted-swapped-tool",
+      "claim_text": "Built the pipeline in TensorFlow.",
+      "source_span": "built the data pipeline in PyTorch",
+      "distorted": true,
+      "expected_violations": ["tensorflow"]
+    },
+    {
+      "id": "distorted-magnitude-inflation",
+      "claim_text": "Managed a $2,500,000 budget.",
+      "source_span": "managed a $250,000 budget",
+      "distorted": true,
+      "expected_violations": ["2500000"]
+    },
+    {
+      "id": "distorted-added-acronym",
+      "claim_text": "Deployed the service on GCP.",
+      "source_span": "deployed the service to production",
+      "distorted": true,
+      "expected_violations": ["gcp"]
+    },
+    {
+      "id": "distorted-invented-count",
+      "claim_text": "Mentored 5 junior engineers.",
+      "source_span": "mentored junior engineers",
+      "distorted": true,
+      "expected_violations": ["5"]
+    },
+    {
+      "id": "distorted-number-and-tool",
+      "claim_text": "Cut costs 25% using PySpark.",
+      "source_span": "cut infrastructure costs using SQL",
+      "distorted": true,
+      "expected_violations": ["25", "pyspark"]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "_comment": "EVAL-01 seed generation cases. Hand-authored until production harvest (/review + mark-final) lands. Each `accepted_output` is grounded in `evidence_bank` + `job` and must pass the deterministic hard-fact gate; `forbidden_facts` are the adversarial channel — facts the output must never assert. `negative_output` is a deliberately ungrounded draft the gate MUST flag.",
+  "cases": [
+    {
+      "id": "cv-001-langgraph-platform",
+      "kind": "cv",
+      "job": {
+        "company": "Novartis",
+        "title": "Director Agentic AI",
+        "location": "London",
+        "description": "Lead agentic AI for drug development using LangGraph and AWS.",
+        "job_summary": {"requirements": ["LangGraph", "AWS", "team leadership"]},
+        "fit_score": 88.0
+      },
+      "evidence_bank": [
+        {"id": "e1", "category": "technical", "claim_text": "Built LangGraph multi-agent platforms on AWS for enterprise AI.", "source_span": "Built LangGraph multi-agent platforms on AWS"},
+        {"id": "e2", "category": "leadership", "claim_text": "Led a team of 8 engineers delivering ML systems.", "source_span": "Led a team of 8 engineers"}
+      ],
+      "accepted_output": "Engineering leader who built LangGraph multi-agent platforms on AWS and led a team of 8 engineers delivering ML systems.",
+      "forbidden_facts": ["PhD", "Google", "40%"],
+      "negative_output": "Engineering leader who built LangGraph platforms on AWS, led a team of 8, and increased revenue 40% at Google."
+    },
+    {
+      "id": "cover-001-fintech",
+      "kind": "cover_letter",
+      "job": {
+        "company": "Monzo",
+        "title": "Staff ML Engineer",
+        "location": "London",
+        "description": "Build fraud detection ML at scale on GCP.",
+        "job_summary": {"requirements": ["fraud detection", "GCP", "MLOps"]},
+        "fit_score": 72.0
+      },
+      "evidence_bank": [
+        {"id": "f1", "category": "technical", "claim_text": "Shipped a fraud detection model on GCP serving 5 million users.", "source_span": "fraud detection model on GCP serving 5 million users"},
+        {"id": "f2", "category": "delivery", "claim_text": "Owned MLOps pipelines with automated retraining.", "source_span": "Owned MLOps pipelines"}
+      ],
+      "accepted_output": "I shipped a fraud detection model on GCP serving 5 million users and owned MLOps pipelines with automated retraining, which maps directly to Monzo's fraud detection work.",
+      "forbidden_facts": ["AWS", "10 million", "PhD"],
+      "negative_output": "I shipped a fraud detection model on AWS serving 10 million users at Stripe."
+    },
+    {
+      "id": "answer-001-impact",
+      "kind": "answer",
+      "job": {
+        "company": "Wise",
+        "title": "Principal Engineer",
+        "location": "London",
+        "description": "Scale payments infrastructure.",
+        "job_summary": {"requirements": ["payments", "scale", "reliability"]},
+        "fit_score": 65.0
+      },
+      "evidence_bank": [
+        {"id": "g1", "category": "delivery", "claim_text": "Reduced payment processing latency by 30 percent.", "source_span": "Reduced payment processing latency by 30 percent"}
+      ],
+      "accepted_output": "My most relevant impact was reducing payment processing latency by 30 percent.",
+      "forbidden_facts": ["50 percent", "Adyen", "Kubernetes"],
+      "negative_output": "My most relevant impact was reducing payment latency by 50 percent at Adyen."
+    }
+  ]
+}
