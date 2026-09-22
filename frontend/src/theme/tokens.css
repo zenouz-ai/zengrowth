@@ -1,0 +1,16 @@
+/* Dark-first glass brand tokens. Swap these values to re-skin; keep the
+   semantic roles (positive/negative/warning/neutral) stable. */
+:root {
+  --color-bg: #06060a;
+  --color-bg-2: #0a0b14;
+  --color-surface: rgba(13, 14, 24, 0.88);
+  --color-border: rgba(120, 130, 170, 0.18);
+  --color-text: #e8ecf5;
+  --color-muted: #8a93ad;
+
+  --color-cyan: #00d4ff;     /* accent / neutral */
+  --color-emerald: #00ffa3;  /* positive */
+  --color-loss: #ff4466;     /* negative */
+  --color-warning: #f7c948;  /* warning */
+  --color-violet: #6332ff;   /* brand accent */
+}

@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.eggs/
+dist/
+build/
+
+# Environments & secrets
+.env
+.env.*
+!.env.example
+credentials/
+secrets/
+*.pem
+*.key
+
+# SQLite + user data (local-first; never commit)
+data/*
+!data/.gitkeep
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+*-wal
+*-shm
+
+# Runtime output: logs, runs, audits, exports, downloads, queue/journal state
+logs/
+runs/
+journals/
+audit_logs/
+artifacts/
+outputs/
+exports/
+downloads/
+
+# Generated personal materials (CVs, resumes, cover letters, application answers)
+data/materials/
+**/*_cv.pdf
+**/*_resume.pdf
+**/cover_letter*
+**/application_answer*
+
+# Browser / session automation state
+**/storage_state.json
+browser_state/
+playwright/.auth/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Test / lint caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Notebooks: checkpoints and executed-output artifacts
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
